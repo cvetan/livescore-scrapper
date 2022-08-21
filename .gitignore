@@ -15,4 +15,10 @@ profiles.clj
 /node_modules
 /log
 
+.idea
+
+.clj-kondo
+
+*.iml
+
 
