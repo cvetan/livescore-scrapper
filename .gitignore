@@ -16,9 +16,11 @@ profiles.clj
 /log
 
 .idea
+*.iml
 
 .clj-kondo
 
-*.iml
+
+.vscode
 
 
