@@ -38,7 +38,7 @@
   (mount/stop #'livescore-scrapper.db.core/*db*)
   (mount/start #'livescore-scrapper.db.core/*db*)
   (binding [*ns* (the-ns 'livescore-scrapper.db.core)]
-    (conman/bind-connection livescore-scrapper.db.core/*db* "sql/queries.sql")))
+    (conman/bind-connection livescore-scrapper.db.core/*db* "sql/sports.sql")))
 
 (defn reset-db
   "Resets database."

@@ -9,6 +9,8 @@
     [reitit.ring.middleware.parameters :as parameters]
     [livescore-scrapper.middleware.formats :as formats]
     [ring.util.http-response :refer :all]
+    [livescore-scrapper.util.responses :as responses]
+    [livescore-scrapper.service.sports :as sports-service]
     [clojure.java.io :as io]))
 
 (defn service-routes []
@@ -35,8 +37,8 @@
 
    ;; swagger documentation
    ["" {:no-doc true
-        :swagger {:info {:title "my-api"
-                         :description "https://cljdoc.org/d/metosin/reitit"}}}
+        :swagger {:info {:title "Livescore scrapper API"
+                         :description "This API will be used as proxy to flashscore.com website."}}}
 
     ["/swagger.json"
      {:get (swagger/create-swagger-handler)}]
@@ -46,45 +48,72 @@
              {:url "/api/swagger.json"
               :config {:validator-url nil}})}]]
 
-   ["/ping"
-    {:get (constantly (ok {:message "pong"}))}]
-   
+   ["/sports"
+    {:swagger {:tags ["Sports API"]}}
 
-   ["/math"
-    {:swagger {:tags ["math"]}}
-
-    ["/plus"
-     {:get {:summary "plus with spec query parameters"
-            :parameters {:query {:x int?, :y int?}}
-            :responses {200 {:body {:total pos-int?}}}
-            :handler (fn [{{{:keys [x y]} :query} :parameters}]
-                       {:status 200
-                        :body {:total (+ x y)}})}
-      :post {:summary "plus with spec body parameters"
-             :parameters {:body {:x int?, :y int?}}
-             :responses {200 {:body {:total pos-int?}}}
-             :handler (fn [{{{:keys [x y]} :body} :parameters}]
-                        {:status 200
-                         :body {:total (+ x y)}})}}]]
-
-   ["/files"
-    {:swagger {:tags ["files"]}}
-
-    ["/upload"
-     {:post {:summary "upload a file"
-             :parameters {:multipart {:file multipart/temp-file-part}}
-             :responses {200 {:body {:name string?, :size int?}}}
-             :handler (fn [{{{:keys [file]} :multipart} :parameters}]
-                        {:status 200
-                         :body {:name (:filename file)
-                                :size (:size file)}})}}]
-
-    ["/download"
-     {:get {:summary "downloads a file"
-            :swagger {:produces ["image/png"]}
+    [""
+     {:get {:summary "This request returns list of sports"
+            :swagger {:produces ["application/json"]}
+            :responses {200 {:description "List of sports"
+                             :body [{:id int?
+                                     :name string?
+                                     :url string?
+                                     :enabled boolean?
+                                     :createdAt string?
+                                     :updatedAt string?}]}}
             :handler (fn [_]
-                       {:status 200
-                        :headers {"Content-Type" "image/png"}
-                        :body (-> "public/img/warning_clojure.png"
-                                  (io/resource)
-                                  (io/input-stream))})}}]]])
+                       (sports-service/get-sports-list))}
+      :post {:summary "This request creates new sport"
+             :swagger {:consumes ["application/json"]
+                       :produces ["application/json"]}
+             :parameters {:body {:name string?
+                                 :url string?
+                                 :enabled boolean?}}
+             :responses {201 {:description "Newly created sport data"
+                              :body {:id int?
+                                     :name string?
+                                     :url string?
+                                     :enabled boolean?
+                                     :createdAt string?
+                                     :updatedAt string?}}
+                         400 {:description "Invalid create sport request"
+                              :body {:status int?
+                                     :errors [string?]
+                                     :message string?}}}
+             :handler (fn [{{{:keys [name url enabled] :as sport-request} :body} :parameters}]
+                        (sports-service/save-sport sport-request))}}
+
+    ]
+
+    ["/{id}"
+     {:get {:summary "This request returns single sport by ID"
+            :swagger {:produces ["application/json"]}
+            :responses {200 {:description "Sport data"
+                             :body {:id int?
+                                     :name string?
+                                     :url string?
+                                     :enabled boolean?
+                                     :createdAt string?
+                                     :updatedAt string?}}
+                        404 {:description "Sport not found"
+                             :body {:status int?
+                                    :message string?}}}
+            :handler (fn [_]
+                       (sports-service/get-sport 1))}
+
+      :put {:summary "This request updates sport"
+            :swagger {:produces ["application/json"]
+                      :consumes ["application/json"]}
+            :responses {204 {:description "Sport updated successfully."}
+                        400 {:description "Bad request"
+                             :body {:status int?
+                                    :errors [string?]
+                                    :message string?}}
+                        404 {:description "Sport not found"
+                             :body {:status int?
+                                    :message string?
+                                    }}}
+            :handler (fn [_]
+                       (sports-service/update-sport 1 {}))}
+
+      }]]])
