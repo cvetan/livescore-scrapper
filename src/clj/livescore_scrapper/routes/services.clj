@@ -86,9 +86,10 @@
 
     ]
 
-    ["/{id}"
+    ["/:id"
      {:get {:summary "This request returns single sport by ID"
             :swagger {:produces ["application/json"]}
+            :parameters {:path {:id int?}}
             :responses {200 {:description "Sport data"
                              :body {:id int?
                                      :name string?
@@ -97,10 +98,9 @@
                                      :createdAt string?
                                      :updatedAt string?}}
                         404 {:description "Sport not found"
-                             :body {:status int?
-                                    :message string?}}}
-            :handler (fn [_]
-                       (sports-service/get-sport 1))}
+                             :body {:message string?}}}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (sports-service/get-sport id))}
 
       :put {:summary "This request updates sport"
             :swagger {:produces ["application/json"]
