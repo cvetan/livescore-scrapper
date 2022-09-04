@@ -12,16 +12,21 @@
                                   :url url
                                   :enabled enabled}))
   (if-not (empty? created)
-    {:body created}))
+    (responses/created {:id (created :id)
+                        :name (created :name)
+                        :url (created :url)
+                        :enabled (created :enabled)
+                        :createdAt (str (created :created_at))
+                        :updatedAt (str (created :updated_at))})))
 
 
 (defn get-sports-list
-  "This sevice function returns list of saved sports"
+  "This function returns list of saved sports"
   []
   {:body (db/fetch-sports)})
 
 (defn get-sport
-  "This service function returns single sport"
+  "This function returns single sport"
   [id]
   (println (str "Get sport with ID of " id))
   (def result (db/fetch-sport-by-id {:id id}))
@@ -30,7 +35,27 @@
     {:body result}))
 
 (defn update-sport
-  "This service function updates sport"
+  "This function updates sport"
   [id {:keys [name url enabled]}]
   {:status 204
     :body {}})
+
+(defn delete-sport
+  "This service function deletes sport"
+  [id]
+  (println "Delete sport with ID " id)
+  (def result (db/sport-exists-by-id {:id id}))
+  (if (= (result :exists) 0)
+    (responses/not-found "Sport with supplied ID not found")
+    (do (db/delete-sport-by-id {:id id})
+        {:status 204})))
+
+(defn enable-sport
+  "This function enables sport"
+  [id]
+  (println "Enable sport with ID" id))
+
+(defn disable-sport
+  "This function disables sport"
+  [id]
+  (println "Disable sport with ID" id))

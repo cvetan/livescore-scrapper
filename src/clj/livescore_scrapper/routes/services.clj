@@ -10,7 +10,7 @@
     [livescore-scrapper.middleware.formats :as formats]
     [ring.util.http-response :refer :all]
     [livescore-scrapper.util.responses :as responses]
-    [livescore-scrapper.service.sports :as sports-service]
+    [livescore-scrapper.service.sports :as sports]
     [livescore-scrapper.service.competitions :as competitions]
     [clojure.java.io :as io]))
 
@@ -63,7 +63,7 @@
                                      :createdAt string?
                                      :updatedAt string?}]}}
             :handler (fn [_]
-                       (sports-service/get-sports-list))}
+                       (sports/get-sports-list))}
       :post {:summary "This request creates new sport"
              :swagger {:consumes ["application/json"]
                        :produces ["application/json"]}
@@ -78,11 +78,10 @@
                                      :createdAt string?
                                      :updatedAt string?}}
                          400 {:description "Invalid create sport request"
-                              :body {:status int?
-                                     :errors [string?]
+                              :body {:errors [string?]
                                      :message string?}}}
              :handler (fn [{{{:keys [name url enabled] :as sport-request} :body} :parameters}]
-                        (sports-service/save-sport sport-request))}}
+                        (sports/save-sport sport-request))}}
 
     ]
 
@@ -100,7 +99,7 @@
                         404 {:description "Sport not found"
                              :body {:message string?}}}
             :handler (fn [{{{:keys [id]} :path} :parameters}]
-                       (sports-service/get-sport id))}
+                       (sports/get-sport id))}
 
       :put {:summary "This request updates sport"
             :swagger {:produces ["application/json"]
@@ -114,13 +113,37 @@
                                     :errors [string?]
                                     :message string?}}
                         404 {:description "Sport not found"
-                             :body {:status int?
-                                    :message string?
-                                    }}}
+                             :body {:message string?}}}
             :handler (fn [_]
-                       (sports-service/update-sport 1 {}))}
+                       (sports/update-sport 1 {}))}
 
-      }]]
+      :delete {:summary "This request deletes sport"
+               :parameters {:path {:id int?}}
+               :responses {204 {:description "Sport deleted successfully."}
+                           404 {:description "Sport not found"
+                                :body {:message string?}}}
+               :handler (fn [{{{:keys [id]} :path} :parameters}]
+                          (sports/delete-sport id))}
+
+      }]
+
+    ["/:id/enable"
+     {:put {:summary "This request will enable sport"
+            :parameters {:path {:id int?}}
+            :responses {204 {:description "Sport enabled successfully."}
+                        404 {:description "Sport not found"
+                             :body {:message string?}}}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (sports/enable-sport id))}}]
+
+    ["/:id/disable"
+     {:put {:summary "This request will disable sport"
+            :parameters {:path {:id int?}}
+            :responses {204 {:description "Sport disabled successfully."}
+                        404 {:description "Sport not found"
+                             :body {:message string?}}}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (sports/disable-sport id))}}]]
 
 
    ["/competitions"
@@ -161,7 +184,7 @@
                                      :errors [string?]
                                      :message string?}}}
              :handler (fn [{{{:keys [sport_id name url country enabled] :as sport-request} :body} :parameters}]
-                        (sports-service/save-sport sport-request))}}]
+                        (sports/save-sport sport-request))}}]
 
     ["/{id}"
      {:get {:summary "This request returns single competition by ID"
