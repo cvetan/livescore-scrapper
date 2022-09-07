@@ -1,4 +1,4 @@
-(ns livescore-scrapper.service.sports
+(ns livescore-scrapper.sports
   (:require
     [livescore-scrapper.db.core :as db]
     [clojure.pprint :as pprint]

@@ -1,4 +1,4 @@
-(ns livescore-scrapper.service.competitions)
+(ns livescore-scrapper.competitions)
 
 :gen-class
 
