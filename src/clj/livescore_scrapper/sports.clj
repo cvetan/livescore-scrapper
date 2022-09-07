@@ -1,9 +1,8 @@
 (ns livescore-scrapper.sports
   (:require
     [livescore-scrapper.db.core :as db]
-    [clojure.pprint :as pprint]
-    [ring.util.http-response :refer :all]
-    [livescore-scrapper.util.responses :as responses]))
+    [livescore-scrapper.util.responses :as responses]
+    [ring.util.http-response :refer :all]))
 
 (defn save-sport
   "This service method will create new sport"
