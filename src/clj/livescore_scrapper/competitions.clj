@@ -1,65 +1,78 @@
-(ns livescore-scrapper.competitions)
+(ns livescore-scrapper.competitions
+  (:require
+    [livescore-scrapper.db.core :as db]
+    [ring.util.http-response :refer :all]
+    [clojure.pprint :as pprint]))
 
 :gen-class
 
 (defn save-competition
   "This service method will create new competition"
-  [{:keys [name url sport_id country enabled]}]
-  {:body {:id 1
-          :name name
-          :sport "Football"
-          :url url
-          :country country
-          :enabled enabled
-          :createdAt "2022-08-23T23:3000"
-          :updatedAt "2022-08-23T23:3000"}
-   :status 201})
+  [save-request]
+  (println "Saving new competition")
+  (def result (db/save-competition save-request))
+  (pprint/pprint result)
+  (if-not (empty? result)
+    (created "" (do (def saved-competition (db/fetch-competition-by-id result))
+                    (pprint/pprint saved-competition)
+                    {:id (saved-competition :id)
+                     :sport (saved-competition :sport)
+                     :name (saved-competition :name)
+                     :url (saved-competition :url)
+                     :country (saved-competition :country)
+                     :enabled (saved-competition :enabled)
+                     :createdAt (str (saved-competition :createdat))
+                     :updatedAt (str (saved-competition :updatedat))}))))
 
 (defn get-competitions-list
   "This sevice function returns list of saved competitions"
   []
-  {:body [{:id 1
-          :name "England Premier League"
-          :sport "Football"
-          :url "https://www.flashscore.com/football/england/premier-league"
-          :country "England"
-          :enabled true
-          :createdAt "2022-08-23T23:3000"
-          :updatedAt "2022-08-23T23:3000"}
-          {:id 2
-          :name "italy Serie A"
-          :sport "Football"
-          :url "https://www.flashscore.com/football/italy/serie-a"
-          :country "Italy"
-          :enabled true
-          :createdAt "2022-08-23T23:3000"
-          :updatedAt "2022-08-23T23:3000"}
-          {:id 3
-          :name "Spain La Liga"
-          :sport "Football"
-          :url "https://www.flashscore.com/football/spain/la-liga"
-          :country "Spain"
-          :enabled true
-          :createdAt "2022-08-23T23:3000"
-          :updatedAt "2022-08-23T23:3000"}]})
+  {:body (db/fetch-competitions)})
 
 (defn get-competition
-  "This service function returns single sport"
+  "This function returns single sport"
   [id]
-  {:body {:id id
-          :name "England Premier League"
-          :sport "Football"
-          :url "https://www.flashscore.com/football/england/premier-league"
-          :country "England"
-          :enabled true
-          :createdAt "2022-08-23T23:3000"
-          :updatedAt "2022-08-23T23:3000"}})
+  (println (str "Get competition with ID of " id))
+  (def result (db/fetch-competition-by-id {:id id}))
+  (if (empty? result)
+    (not-found {:status 404
+                :message "Competition with supplied ID not found."})
+    {:body result}))
+
+(defn delete-competition
+  "This function deletes competition"
+  [id]
+  (println (str "Deleting competition with ID of " id))
+  (def result (db/competition-exists-by-id {:id id}))
+  (if (= (result :exists) 0)
+    (not-found {:status 404
+                :message "Competition with supplied ID not found"})
+    (do (db/delete-competition {:id id})
+        (no-content))))
 
 (defn update-competition
   "This function updates competition"
   [id {:keys [name url sport_id country enabled]}]
   {:status 204
     :body {}})
+
+(defn enable-competition
+  "This function enables competition"
+  [id]
+  (if (= (result :exists) 0)
+    (not-found {:status 404
+                :message "Competition with supplied ID not found"})
+    (do (db/enable-competition {:id id})
+        (no-content))))
+
+(defn disable-competition
+  "This function enables competition"
+  [id]
+  (if (= (result :exists) 0)
+    (not-found {:status 404
+                :message "Competition with supplied ID not found"})
+    (do (db/disable-competition {:id id})
+        (no-content))))
 
 (defn get-standings
   "This function returns standings for competition"

@@ -15,7 +15,7 @@
              *db*))
   :stop (conman/disconnect! *db*))
 
-(conman/bind-connection *db* "sql/sports.sql")
+(conman/bind-connection *db* "sql/sports.sql" "sql/competitions.sql")
 
 (extend-protocol next.jdbc.result-set/ReadableColumn
   java.sql.Timestamp

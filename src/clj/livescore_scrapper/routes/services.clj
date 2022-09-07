@@ -185,26 +185,27 @@
                               :body {:status int?
                                      :errors [string?]
                                      :message string?}}}
-             :handler (fn [{{{:keys [sport_id name url country enabled] :as sport-request} :body} :parameters}]
-                        (sports/save-sport sport-request))}}]
+             :handler (fn [{{{:keys [sport_id name url country enabled] :as competition-request} :body} :parameters}]
+                        (competitions/save-competition competition-request))}}]
 
-    ["/{id}"
+    ["/:id"
      {:get {:summary "This request returns single competition by ID"
             :swagger {:produces ["application/json"]}
+            :parameters {:path {:id int?}}
             :responses {200 {:description "Competition data"
                              :body {:id int?
-                                     :sport string?
-                                     :name string?
-                                     :url string?
-                                     :country string?
-                                     :enabled boolean?
-                                     :createdAt string?
-                                     :updatedAt string?}}
+                                    :sport string?
+                                    :name string?
+                                    :url string?
+                                    :country string?
+                                    :enabled boolean?
+                                    :createdAt string?
+                                    :updatedAt string?}}
                         404 {:description "Competition not found"
                              :body {:status int?
                                     :message string?}}}
-            :handler (fn [_]
-                       (competitions/get-competition 1))}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (competitions/get-competition id))}
 
       :put {:summary "This request updates competition"
             :swagger {:produces ["application/json"]
@@ -223,8 +224,15 @@
                              :body {:status int?
                                     :message string?
                                     }}}
-            :handler (fn [_]
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
                        (competitions/update-competition 1 {}))}
+      :delete {:summary "This request deletes competition"
+               :parameters {:path {:id int?}}
+               :responses {204 {:description "Competition deleted successfully."}
+                           404 {:body {:status int?
+                                       :message string?}}}
+               :handler (fn [{{{:keys [id]} :path} :parameters}]
+                          (competitions/delete-competition id))}
 
       }]
 
@@ -258,5 +266,25 @@
                              :body {:status int?
                                     :message string?}}}
             :handler (fn [_]
-                       (competitions/get-results 1))}}]]
+                       (competitions/get-results 1))}}]
+
+    ["/{id}/enable"
+     {:put {:summary "This request enables competition"
+            :parameters {:path {:id int?}}
+            :responses {204 {:description "Competition successfully enabled"}
+                        404 {:description "Competition not found"
+                             :body {:status int?
+                                    :message string?}}}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (competitions/enable-competition id))}}]
+
+    ["/{id}/disable"
+     {:put {:summary "This request disables competition"
+            :parameters {:path {:id int?}}
+            :responses {204 {:description "Competition successfully disabled"}
+                        404 {:description "Competition not found"
+                             :body {:status int?
+                                    :message string?}}}
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (competitions/disable-competition id))}}]]
    ])
