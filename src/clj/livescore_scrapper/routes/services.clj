@@ -10,8 +10,8 @@
     [livescore-scrapper.middleware.formats :as formats]
     [ring.util.http-response :refer :all]
     [livescore-scrapper.util.responses :as responses]
-    [livescore-scrapper.service.sports :as sports]
-    [livescore-scrapper.service.competitions :as competitions]
+    [livescore-scrapper.sports :as sports]
+    [livescore-scrapper.competitions :as competitions]
     [clojure.java.io :as io]))
 
 (defn service-routes []
@@ -106,7 +106,8 @@
                       :consumes ["application/json"]}
             :parameters {:body {:name string?
                                  :url string?
-                                 :enabled boolean?}}
+                                 :enabled boolean?}
+                         :path {:id int?}}
             :responses {204 {:description "Sport updated successfully."}
                         400 {:description "Bad request"
                              :body {:status int?
@@ -114,8 +115,9 @@
                                     :message string?}}
                         404 {:description "Sport not found"
                              :body {:message string?}}}
-            :handler (fn [_]
-                       (sports/update-sport 1 {}))}
+            :handler (fn [{{{:keys [id]} :path} :parameters
+                           {{:keys [name url enabled] :as update-request} :body} :parameters}]
+                       (sports/update-sport id update-request))}
 
       :delete {:summary "This request deletes sport"
                :parameters {:path {:id int?}}

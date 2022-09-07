@@ -25,3 +25,21 @@ where id = :id;
 -- :name delete-sport-by-id :! :1
 DELETE FROM sports
 WHERE id = :id;
+
+
+-- :name update-sport :! :1
+UPDATE sports
+SET name = :name, url = :url, enabled = :enabled
+WHERE id = :id;
+
+
+-- :name enable-sport :! :1
+UPDATE sports
+SET enabled = 1
+WHERE id = :id;
+
+
+-- :name disable-sport :! :1
+UPDATE sports
+SET enabled = 0
+WHERE id = :id;

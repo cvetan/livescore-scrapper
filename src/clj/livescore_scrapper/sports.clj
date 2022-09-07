@@ -2,22 +2,22 @@
   (:require
     [livescore-scrapper.db.core :as db]
     [clojure.pprint :as pprint]
-    [ring.util.http-response :as response]
+    [ring.util.http-response :refer :all]
     [livescore-scrapper.util.responses :as responses]))
 
 (defn save-sport
   "This service method will create new sport"
   [{:keys [name url enabled]}]
-  (def created (db/create-sport! {:name name
+  (def result (db/create-sport! {:name name
                                   :url url
                                   :enabled enabled}))
-  (if-not (empty? created)
-    (responses/created {:id (created :id)
-                        :name (created :name)
-                        :url (created :url)
-                        :enabled (created :enabled)
-                        :createdAt (str (created :created_at))
-                        :updatedAt (str (created :updated_at))})))
+  (if-not (empty? result)
+    (created "" {:id (result :id)
+                 :name (result :name)
+                 :url (result :url)
+                 :enabled (result :enabled)
+                 :createdAt (str (result :created_at))
+                 :updatedAt (str (result :updated_at))})))
 
 
 (defn get-sports-list
@@ -37,8 +37,15 @@
 (defn update-sport
   "This function updates sport"
   [id {:keys [name url enabled]}]
-  {:status 204
-    :body {}})
+  (println "Update sport with ID" id)
+  (def result (db/sport-exists-by-id {:id id}))
+  (if (= (result :exists) 0)
+    (responses/not-found "Sport with supplied ID not found")
+    (do (db/update-sport {:id id
+                          :name name
+                          :url url
+                          :enabled enabled})
+        (no-content))))
 
 (defn delete-sport
   "This service function deletes sport"
@@ -48,14 +55,24 @@
   (if (= (result :exists) 0)
     (responses/not-found "Sport with supplied ID not found")
     (do (db/delete-sport-by-id {:id id})
-        {:status 204})))
+        (no-content))))
 
 (defn enable-sport
   "This function enables sport"
   [id]
-  (println "Enable sport with ID" id))
+  (println "Enable sport with ID" id)
+  (def result (db/sport-exists-by-id {:id id}))
+  (if (= (result :exists) 0)
+    (responses/not-found "Sport with supplied ID not found")
+    (do (db/enable-sport {:id id})
+        (no-content))))
 
 (defn disable-sport
   "This function disables sport"
   [id]
-  (println "Disable sport with ID" id))
+  (println "Disable sport with ID" id)
+  (def result (db/sport-exists-by-id {:id id}))
+  (if (= (result :exists) 0)
+    (responses/not-found "Sport with supplied ID not found")
+    (do (db/disable-sport {:id id})
+        (no-content))))
