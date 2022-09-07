@@ -1,0 +1,2 @@
+ALTER TABLE sports
+DROP CONSTRAINT IF EXISTS `url-unq`;

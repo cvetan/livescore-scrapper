@@ -1,0 +1,2 @@
+ALTER TABLE sports
+ADD CONSTRAINT `url-unq` UNIQUE (url);
