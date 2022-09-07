@@ -52,9 +52,15 @@
 
 (defn update-competition
   "This function updates competition"
-  [id {:keys [name url sport_id country enabled]}]
-  {:status 204
-    :body {}})
+  [id update-request]
+  (def result (db/competition-exists-by-id {:id id}))
+  (pprint/pprint result)
+  (pprint/pprint update-request)
+  (if (= (result :exists) 0)
+    (not-found {:status 404
+                :message "Competition with supplied ID not found"})
+    (do (db/update-competition (merge {:id id} update-request))
+        (no-content))))
 
 (defn enable-competition
   "This function enables competition"

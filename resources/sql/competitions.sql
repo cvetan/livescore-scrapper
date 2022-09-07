@@ -55,3 +55,13 @@ INSERT INTO competitions
 (sport_id, name, url, country, enabled)
 VALUES (:sport_id, :name, :url, :country, :enabled)
 RETURNING id;
+
+
+-- :name update-competition :! :1
+UPDATE competitions
+SET sport_id = :sport_id,
+    name = :name,
+    url = :url,
+    country = :country,
+    enabled = :enabled
+WHERE id = :id;

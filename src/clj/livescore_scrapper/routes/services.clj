@@ -210,7 +210,8 @@
       :put {:summary "This request updates competition"
             :swagger {:produces ["application/json"]
                       :consumes ["application/json"]}
-            :parameters {:body {:sport_id int?
+            :parameters {:path {:id int?}
+                         :body {:sport_id int?
                                  :name string?
                                  :url string?
                                  :country string?
@@ -224,8 +225,9 @@
                              :body {:status int?
                                     :message string?
                                     }}}
-            :handler (fn [{{{:keys [id]} :path} :parameters}]
-                       (competitions/update-competition 1 {}))}
+            :handler (fn [{{{:keys [id]} :path} :parameters
+                           {{:keys [sport_id name url country enabled] :as update-request} :body} :parameters}]
+                       (competitions/update-competition id update-request))}
       :delete {:summary "This request deletes competition"
                :parameters {:path {:id int?}}
                :responses {204 {:description "Competition deleted successfully."}
