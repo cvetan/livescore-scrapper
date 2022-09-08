@@ -65,3 +65,8 @@ SET sport_id = :sport_id,
     country = :country,
     enabled = :enabled
 WHERE id = :id;
+
+
+-- :name import-competitions :! :*
+INSERT IGNORE INTO competitions(sport_id, name, url, country)
+VALUES :tuple*:competitions;

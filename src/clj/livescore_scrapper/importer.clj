@@ -1,9 +1,8 @@
 (ns livescore-scrapper.importer
   (:require
     [livescore-scrapper.db.core :as db]
-    [livescore-scrapper.util.sitemap :as sitemap]
     [livescore-scrapper.util.mapper :as mapper]
-    [clojure.pprint :as pprint]
+    [livescore-scrapper.util.sitemap :as sitemap]
     ))
 :gen-class
 
@@ -15,3 +14,12 @@
                              (mapper/map-sport sport))
                            sitemap-sports))]
     (db/import-sports {:sports mapped-sports})))
+
+(defn import-competitions
+  "This function imports competitions from sitemap"
+  []
+  (let [sitemap-competitions (sitemap/find-competitions)
+        mapped-competitions (vec (map (fn [competition]
+                                        (mapper/map-competition competition))
+                                      sitemap-competitions))]
+    (db/import-competitions {:competitions mapped-competitions})))

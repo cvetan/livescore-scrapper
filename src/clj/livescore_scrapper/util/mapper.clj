@@ -1,8 +1,7 @@
 (ns livescore-scrapper.util.mapper
   (:require
-    [livescore-scrapper.db.core :as db]
     [clojure.string :as str]
-    [clojure.pprint :as pprint]))
+    [livescore-scrapper.db.core :as db]))
 
 :gen-class
 
@@ -25,8 +24,10 @@
   "This function maps sport from extracted sitemap entry"
   [url]
   (let [segments (str/split url #"/")
-        id-map (db/get-url-id-map)]
-    {:sport_id (extract-sport-id id-map url)
-     :name     (str/capitalize (get segments 5))
-     :url      url
-     :country  (str/capitalize (get segments 4))}))
+        id-map (db/get-url-id-map)
+        sport-id (extract-sport-id id-map url)]
+    (when-not (nil? sport-id)
+      [sport-id
+       (str/capitalize (get segments 5))
+       url
+       (str/capitalize (get segments 4))])))
