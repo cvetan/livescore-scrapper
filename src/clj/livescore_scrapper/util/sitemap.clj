@@ -1,8 +1,7 @@
 (ns livescore-scrapper.util.sitemap
   (:require
-    [clojure.xml :as xml]
     [clojure.string :as str]
-    [clojure.pprint :as pprint]))
+    [clojure.xml :as xml]))
 
 :gen-class
 

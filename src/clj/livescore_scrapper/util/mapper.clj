@@ -10,8 +10,7 @@
   "This function maps sport from extracted sitemap entry"
   [url]
   (let [segments (str/split url #"/")]
-    {:name (str/capitalize (get segments 3))
-     :url  url}))
+    [(str/capitalize (get segments 3)) url]))
 
 (defn extract-sport-id
   "This function maps URL to sport ID if matching found"

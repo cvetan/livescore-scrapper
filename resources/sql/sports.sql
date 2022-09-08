@@ -48,3 +48,8 @@ WHERE id = :id;
 SELECT id, url
 FROM sports
 ORDER BY url;
+
+
+-- :name import-sports :! :*
+INSERT IGNORE INTO sports(name, url)
+VALUES :tuple*:sports;
