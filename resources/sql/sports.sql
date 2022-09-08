@@ -43,3 +43,8 @@ WHERE id = :id;
 UPDATE sports
 SET enabled = 0
 WHERE id = :id;
+
+-- :name get-url-id-map :? :*
+SELECT id, url
+FROM sports
+ORDER BY url;
