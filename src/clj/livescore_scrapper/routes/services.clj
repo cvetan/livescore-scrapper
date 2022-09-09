@@ -1,18 +1,16 @@
 (ns livescore-scrapper.routes.services
   (:require
+    [livescore-scrapper.competitions :as competitions]
+    [livescore-scrapper.middleware.formats :as formats]
+    [livescore-scrapper.sports :as sports]
+    [reitit.coercion.spec :as spec-coercion]
+    [reitit.ring.coercion :as coercion]
+    [reitit.ring.middleware.multipart :as multipart]
+    [reitit.ring.middleware.muuntaja :as muuntaja]
+    [reitit.ring.middleware.parameters :as parameters]
     [reitit.swagger :as swagger]
     [reitit.swagger-ui :as swagger-ui]
-    [reitit.ring.coercion :as coercion]
-    [reitit.coercion.spec :as spec-coercion]
-    [reitit.ring.middleware.muuntaja :as muuntaja]
-    [reitit.ring.middleware.multipart :as multipart]
-    [reitit.ring.middleware.parameters :as parameters]
-    [livescore-scrapper.middleware.formats :as formats]
-    [ring.util.http-response :refer :all]
-    [livescore-scrapper.util.responses :as responses]
-    [livescore-scrapper.sports :as sports]
-    [livescore-scrapper.competitions :as competitions]
-    [clojure.java.io :as io]))
+    [ring.util.http-response :refer :all]))
 
 (defn service-routes []
   ["/api"
@@ -243,18 +241,19 @@
             :swagger {:produces ["application/json"]}
             :parameters {:path {:id int?}}
             :responses {200 {:description "Competition standings"
-                             :body [{:position int?
+                             :body [{:position string?
                                      :team string?
                                      :mp int?
                                      :w int?
                                      :d int?
                                      :l int?
-                                     :pts int?}]}
+                                     :gd string?
+                                     :points int?}]}
                         404 {:description "Competition not found"
                              :body {:status int?
                                     :message string?}}}
-            :handler (fn [_]
-                       (competitions/get-standings 1))}}]
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (competitions/get-standings id))}}]
 
     ["/{id}/results"
      {:get {:summary "This request fetches results for competition"

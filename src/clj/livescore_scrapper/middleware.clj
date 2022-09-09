@@ -1,10 +1,10 @@
 (ns livescore-scrapper.middleware
   (:require
-    [livescore-scrapper.env :refer [defaults]]
     [livescore-scrapper.config :refer [env]]
-    [ring.middleware.flash :refer [wrap-flash]]
+    [livescore-scrapper.env :refer [defaults]]
     [ring.adapter.undertow.middleware.session :refer [wrap-session]]
-    [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
+    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+    [ring.middleware.flash :refer [wrap-flash]])
   )
 
 (defn wrap-base [handler]

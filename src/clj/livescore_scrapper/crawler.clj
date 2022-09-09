@@ -1,7 +1,7 @@
 (ns livescore-scrapper.crawler
   (:require
-    [etaoin.api :as e]
-    [clojure.string :as str])
+    [clojure.string :as str]
+    [etaoin.api :as e])
   (:gen-class))
 
 (def driver (e/boot-driver :firefox {:headless true}))

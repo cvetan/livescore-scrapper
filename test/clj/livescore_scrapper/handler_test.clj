@@ -1,11 +1,11 @@
 (ns livescore-scrapper.handler-test
   (:require
     [clojure.test :refer :all]
-    [ring.mock.request :refer :all]
     [livescore-scrapper.handler :refer :all]
     [livescore-scrapper.middleware.formats :as formats]
+    [mount.core :as mount]
     [muuntaja.core :as m]
-    [mount.core :as mount]))
+    [ring.mock.request :refer :all]))
 
 (defn parse-json [body]
   (m/decode formats/instance "application/json" body))

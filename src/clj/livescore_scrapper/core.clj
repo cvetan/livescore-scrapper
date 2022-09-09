@@ -1,12 +1,12 @@
 (ns livescore-scrapper.core
   (:require
-    [livescore-scrapper.handler :as handler]
-    [livescore-scrapper.nrepl :as nrepl]
-    [luminus.http-server :as http]
-    [luminus-migrations.core :as migrations]
-    [livescore-scrapper.config :refer [env]]
     [clojure.tools.cli :refer [parse-opts]]
     [clojure.tools.logging :as log]
+    [livescore-scrapper.config :refer [env]]
+    [livescore-scrapper.handler :as handler]
+    [livescore-scrapper.nrepl :as nrepl]
+    [luminus-migrations.core :as migrations]
+    [luminus.http-server :as http]
     [mount.core :as mount])
   (:gen-class))
 

@@ -1,8 +1,8 @@
 (ns livescore-scrapper.env
   (:require
-    [selmer.parser :as parser]
     [clojure.tools.logging :as log]
-    [livescore-scrapper.dev-middleware :refer [wrap-dev]]))
+    [livescore-scrapper.dev-middleware :refer [wrap-dev]]
+    [selmer.parser :as parser]))
 
 (def defaults
   {:init

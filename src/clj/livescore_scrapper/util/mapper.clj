@@ -31,3 +31,15 @@
        (str/capitalize (get segments 5))
        url
        (str/capitalize (get segments 4))])))
+
+(defn map-standings-row
+  "This function maps standings row from scrapped data"
+  [row]
+  {:position (get row 0)
+   :team (get row 1)
+   :mp (Integer/parseInt (get row 2))
+   :w (Integer/parseInt (get row 3))
+   :d (Integer/parseInt (get row 4))
+   :l (Integer/parseInt (get row 5))
+   :gd (get row 6)
+   :points (Integer/parseInt (get row 7))})

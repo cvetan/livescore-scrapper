@@ -1,8 +1,8 @@
 (ns livescore-scrapper.dev-middleware
   (:require
+    [prone.middleware :refer [wrap-exceptions]]
     [ring.middleware.reload :refer [wrap-reload]]
-    [selmer.middleware :refer [wrap-error-page]]
-    [prone.middleware :refer [wrap-exceptions]]))
+    [selmer.middleware :refer [wrap-error-page]]))
 
 (defn wrap-dev [handler]
   (-> handler

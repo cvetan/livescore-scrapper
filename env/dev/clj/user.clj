@@ -1,15 +1,15 @@
 (ns user
   "Userspace functions you can run by default in your local REPL."
   (:require
-   [livescore-scrapper.config :refer [env]]
     [clojure.pprint]
     [clojure.spec.alpha :as s]
-    [expound.alpha :as expound]
-    [mount.core :as mount]
-    [livescore-scrapper.core :refer [start-app]]
-    [livescore-scrapper.db.core]
     [conman.core :as conman]
-    [luminus-migrations.core :as migrations]))
+    [expound.alpha :as expound]
+    [livescore-scrapper.config :refer [env]]
+    [livescore-scrapper.core]
+    [livescore-scrapper.db.core]
+    [luminus-migrations.core :as migrations]
+    [mount.core :as mount]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 

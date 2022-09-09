@@ -1,11 +1,11 @@
 (ns livescore-scrapper.db.core
   (:require
-    [next.jdbc.date-time]
-    [next.jdbc.result-set]
     [clojure.tools.logging :as log]
     [conman.core :as conman]
     [livescore-scrapper.config :refer [env]]
-    [mount.core :refer [defstate]]))
+    [mount.core :refer [defstate]]
+    [next.jdbc.date-time]
+    [next.jdbc.result-set]))
 
 (defstate ^:dynamic *db*
   :start (if-let [jdbc-url (env :database-url)]

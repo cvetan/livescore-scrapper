@@ -1,12 +1,12 @@
 (ns livescore-scrapper.db.core-test
   (:require
-   [livescore-scrapper.db.core :refer [*db*] :as db]
-   [java-time.pre-java8]
-   [luminus-migrations.core :as migrations]
-   [clojure.test :refer :all]
-   [next.jdbc :as jdbc]
-   [livescore-scrapper.config :refer [env]]
-   [mount.core :as mount]))
+    [clojure.test :refer :all]
+    [java-time.pre-java8]
+    [livescore-scrapper.config :refer [env]]
+    [livescore-scrapper.db.core :refer [*db*] :as db]
+    [luminus-migrations.core :as migrations]
+    [mount.core :as mount]
+    [next.jdbc :as jdbc]))
 
 (use-fixtures
   :once

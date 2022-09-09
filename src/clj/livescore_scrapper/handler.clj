@@ -1,13 +1,12 @@
 (ns livescore-scrapper.handler
   (:require
+    [livescore-scrapper.env :refer [defaults]]
     [livescore-scrapper.middleware :as middleware]
     [livescore-scrapper.routes.services :refer [service-routes]]
-    [reitit.swagger-ui :as swagger-ui]
+    [mount.core :as mount]
     [reitit.ring :as ring]
     [ring.middleware.content-type :refer [wrap-content-type]]
-    [ring.middleware.webjars :refer [wrap-webjars]]
-    [livescore-scrapper.env :refer [defaults]]
-    [mount.core :as mount]))
+    [ring.middleware.webjars :refer [wrap-webjars]]))
 
 (mount/defstate init-app
   :start ((or (:init defaults) (fn [])))

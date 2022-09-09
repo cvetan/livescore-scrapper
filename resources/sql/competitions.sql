@@ -70,3 +70,12 @@ WHERE id = :id;
 -- :name import-competitions :! :*
 INSERT IGNORE INTO competitions(sport_id, name, url, country)
 VALUES :tuple*:competitions;
+
+
+-- :name get-competition-url :? :1
+SELECT c.url
+FROM competitions c
+JOIN sports s ON c.sport_id = s.id
+WHERE s.enabled = 1 AND
+      c.enabled = 1 AND
+      c.id = :id;
