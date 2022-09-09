@@ -1,6 +1,7 @@
 (ns livescore-scrapper.sports
   (:require
     [livescore-scrapper.db.core :as db]
+    [livescore-scrapper.importer :as importer]
     [livescore-scrapper.util.responses :as responses]
     [ring.util.http-response :refer :all]))
 
@@ -75,3 +76,9 @@
     (responses/not-found "Sport with supplied ID not found")
     (do (db/disable-sport {:id id})
         (no-content))))
+
+(defn import
+  "This function will run import of sports from sitemap"
+  []
+  (importer/import-sports)
+  (no-content))

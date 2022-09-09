@@ -3,6 +3,7 @@
     [clojure.pprint :as pprint]
     [livescore-scrapper.crawler :as crawler]
     [livescore-scrapper.db.core :as db]
+    [livescore-scrapper.importer :as importer]
     [livescore-scrapper.util.mapper :as mapper]
     [ring.util.http-response :refer :all]))
 
@@ -111,3 +112,9 @@
                                          (mapper/map-results-row row))
                                        results))]
         {:body mapped-results}))))
+
+(defn import
+  "This function will import competitions from sitemap"
+  []
+  (importer/import-competitions)
+  (no-content))

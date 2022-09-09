@@ -46,6 +46,20 @@
      {:get (swagger-ui/create-swagger-ui-handler
              {:url "/api/swagger.json"
               :config {:validator-url nil}})}]]
+   ["/import"
+    {:swagger {:tags ["Import API"]}}
+
+    ["/sports"
+     {:post {:summary "This request will trigger sports import from sitemap"
+             :responses {204 {:description "Sports imported successfully"}}
+             :handler (fn [_]
+                        (sports/import))}}]
+
+    ["/competitions"
+     {:post {:summary "This request will trigger competitions import from sitemap"
+             :responses {204 {:description "Competitions imported successfully"}}
+             :handler (fn [_]
+                        (competitions/import))}}]]
 
    ["/sports"
     {:swagger {:tags ["Sports API"]}}
