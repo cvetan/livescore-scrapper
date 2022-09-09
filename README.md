@@ -1,6 +1,6 @@
 # livescore-scrapper
 
-generisano korišćenjem Luminus frejmvorka verzija "4.40
+generisano korišćenjem Luminus frejmvorka verzija "4.40"
 
 
 ### Opis
