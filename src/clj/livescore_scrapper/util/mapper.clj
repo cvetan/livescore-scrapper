@@ -43,3 +43,11 @@
    :l (Integer/parseInt (get row 5))
    :gd (get row 6)
    :points (Integer/parseInt (get row 7))})
+
+(defn map-results-row
+  "This function maps results row from scrapped data"
+  [row]
+  {:time (get row 0)
+   :match (str (get row 1) " - " (get row 2))
+   :finalScore (str (get row 3) ":" (get row 4))
+   :halftimeScore (str (get row 5) ":" (get row 6))})

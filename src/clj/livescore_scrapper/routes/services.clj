@@ -262,12 +262,13 @@
             :responses {200 {:description "Competition results"
                              :body [{:time string?
                                      :match string?
-                                     :result string?}]}
+                                     :finalScore string?
+                                     :halftimeScore string?}]}
                         404 {:description "Competition not found"
                              :body {:status int?
                                     :message string?}}}
-            :handler (fn [_]
-                       (competitions/get-results 1))}}]
+            :handler (fn [{{{:keys [id]} :path} :parameters}]
+                       (competitions/get-results id))}}]
 
     ["/{id}/enable"
      {:put {:summary "This request enables competition"

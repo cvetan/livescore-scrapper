@@ -17,4 +17,15 @@
       (vec (map (fn [row]
               (str/split (e/get-element-text-el driver row) #"\n")) rows)))))
 
+(defn crawl-results
+  "This function will crawl results on the given url"
+  [url]
+  (e/with-firefox-headless
+    driver
+    (e/go driver url)
+    (e/wait-visible driver {:css "div.event.event--results"})
+    (let [rows (e/query-all driver {:css "div.event__match.event__match--static.event__match--twoLine"})]
+      (vec (map (fn [row]
+              (str/split (e/get-element-text-el driver row) #"\n")) rows)))))
+
 (e/quit driver)

@@ -101,7 +101,13 @@
 (defn get-results
   "This function returns result for competition"
   [id]
-  {:status 200
-   :body   [{:time   "21:00"
-             :match  "Chelsea - Liverpool"
-             :result "2:0"}]})
+  (let [result (db/get-competition-url {:id id})]
+    (pprint/pprint result)
+    (if (nil? result)
+      (not-found {:status  404
+                  :message "Competition with supplied ID not found"})
+      (let [results (crawler/crawl-results (str (result :url) "results/"))
+            mapped-results (vec (map (fn [row]
+                                         (mapper/map-results-row row))
+                                       results))]
+        {:body mapped-results}))))
